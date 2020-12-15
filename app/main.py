@@ -38,12 +38,15 @@ class dataLoader():
             print("Error: {}".format(str(e)))
 
 def main():
-    unique_headers = set()
-    for filename in iglob('/app/data/local_authority.csv'):
-        with open(filename, 'r') as fin:
-            csvin = csv.reader(fin)
-            unique_headers.update(next(csvin, []))
-            print(unique_headers)
+    # unique_headers = set()
+    # for filename in iglob('/app/data/local_authority.csv'):
+    #     with open(filename, 'r') as fin:
+    #         csvin = csv.reader(fin)
+    #         unique_headers.update(next(csvin, []))
+    #         print(unique_headers)
+
+    db = dataLoader()
+    db.pg_load_table('/app/data/lau2_pc_la.csv',"database")
 
 if __name__ == "__main__":
     main()
