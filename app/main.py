@@ -1,6 +1,20 @@
 import csv
 from glob import iglob
-import psycopg2
+import pandas as pd
+from sqlalchemy import create_engine
+import numpy as np
+
+import argparse
+import sys
+import time
+
+def parse_args():
+    parser = argparse.ArgumentParser("Import data from csv to postgresDB")
+    parser.add_argument("-p", "--path", type=str, help="path to .csv files")
+    parser.add_argument("-t", "--tablename", type=str, help="set name to table")
+    args = parser.parse_args(args=None if sys.argv[1:] else ['--help'])
+
+    return parser.parse_args()
 
 class dataLoader():
     def __init__(self):
@@ -9,6 +23,7 @@ class dataLoader():
         self.port = "5432"
         self.user = "username"
         self.pwd = "secret"
+        self.chuck_size = 10000
 
     def file_header(self, file_path):
         unique_headers = set()
@@ -16,37 +31,37 @@ class dataLoader():
             with open(filename, 'r') as fin:
                 csvin = csv.reader(fin)
                 unique_headers.update(next(csvin, []))
-                return unique_headers
+                return list(unique_headers)
 
     def pg_load_table(self, file_path, table_name):
         try:
-            conn = psycopg2.connect(dbname=self.dbname, host=self.host, port=self.port, user=self.user, password=self.pwd)
-            print("Connecting to Database")
-            cur = conn.cursor()
-            f = open(file_path, "r")
-            # Truncate the table first
-            cur.execute("Truncate {} Cascade;".format(table_name))
-            print("Truncated {}".format(table_name))
-            # Load table from the file with header
-            cur.copy_expert("copy {} from STDIN CSV HEADER QUOTE '\"'".format(table_name), f)
-            cur.execute("commit;")
-            print("Loaded data into {}".format(table_name))
-            conn.close()
-            print("DB connection closed.")
+            engine = create_engine('postgres://{}:{}@{}:{}/{}'.format(self.user, self.pwd, self.host, self.port, self.dbname))
+            count = 0
+            for df in pd.read_csv(file_path, chunksize=self.chuck_size):
+                df = df.replace(r'^\s*$', np.nan, regex=True)
+                df.to_sql(
+                    table_name,
+                    engine,
+                    index=False,
+                    if_exists='append'  # if the table already exists, append this data
+                )
+                if count == 1000000:
+                    break
+                count += self.chuck_size
+                print("{0} rows".format(count), end="\r")
+            print("Success!!")
 
         except Exception as e:
             print("Error: {}".format(str(e)))
 
 def main():
-    # unique_headers = set()
-    # for filename in iglob('/app/data/local_authority.csv'):
-    #     with open(filename, 'r') as fin:
-    #         csvin = csv.reader(fin)
-    #         unique_headers.update(next(csvin, []))
-    #         print(unique_headers)
+    args = parse_args()
+    if args.path == None and args.tablename == None:
+        args.parse_args(args=None if sys.argv[1:] else ['--help'])
 
-    db = dataLoader()
-    db.pg_load_table('/app/data/lau2_pc_la.csv',"database")
+    else:
+        cv = dataLoader()
+        cv.pg_load_table(args.path, args.tablename)
 
 if __name__ == "__main__":
     main()
