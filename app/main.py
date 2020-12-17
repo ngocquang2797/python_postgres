@@ -13,10 +13,10 @@ def parse_args():
     parser = argparse.ArgumentParser("Import data from csv to postgresDB")
     parser.add_argument("-p", "--path", type=str, help="path to .csv files")
     parser.add_argument("-t", "--tablename", type=str, help="set name to table")
-    parser.add_argument("-m", "--mode", type=str, default="replace", help="append: apppend if existed \nreplace: replace")
+    parser.add_argument("-m", "--mode", type=str, default="append", help="append: apppend if existed \nreplace: replace")
     parser.add_argument('-c', '--columns', action='store', dest='alist',
                         type=str, nargs='*', default=[],
-                        help="Examples: -i fid wd19nm, -i lad19cd")
+                        help="Special column\nExamples: -i fid wd19nm, -i lad19cd")
     args = parser.parse_args(args=None if sys.argv[1:] else ['--help'])
 
     return parser.parse_args()
