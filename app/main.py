@@ -1,13 +1,5 @@
-import csv
-from glob import iglob
-import pandas as pd
-from sqlalchemy import create_engine
-import sqlalchemy
-import numpy as np
-
 import argparse
 import sys
-import time
 
 from pgsql.core import dataLoader
 

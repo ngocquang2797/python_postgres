@@ -8,8 +8,9 @@ $ docker-compose run --rm app /bin/bash
 ## import data to sql
 $ python main.py -p {csv path} -t {table name} -m {mode} -c {special columns}
 
-###### Ex: python main.py -p /app/data/lau2_pc_la.csv -t test
-###### Ex: python main.py -p /app/data/ONSPD_MAY_2020_UK.csv -t test -c ru11ind
+
+###### Ex:root@:/app/app# python main.py -p /app/data/lau2_pc_la.csv -t test
+###### Ex:root@:/app/app# python main.py -p /app/data/ONSPD_MAY_2020_UK.csv -t test -c ru11ind
 
 ### database info:         
         dbname = "database"

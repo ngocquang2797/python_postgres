@@ -1,4 +1,3 @@
-import sys
 import csv
 from glob import iglob
 import pandas as pd
@@ -46,7 +45,6 @@ class Loader():
 
         except Exception as e:
             print("Error: {}".format(str(e)))
-
 
 class dataLoader():
     def __init__(self):
