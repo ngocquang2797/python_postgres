@@ -4,6 +4,7 @@ import pandas as pd
 from sqlalchemy import create_engine
 import sqlalchemy
 import numpy as np
+import geopandas as gpd
 
 class Loader():
     def __init__(self):
@@ -69,26 +70,38 @@ class dataLoader():
             types[col] = sqlalchemy.types.String()
         return types
 
-    def pg_load_table(self, file_path, table_name, m='replace', colums=None):
+    def import_db(self, df, table_name, engine, dtypes, m):
+        # replace space value to nan
+        df = df.replace(r'^\s*$', np.nan, regex=True)
+        df = df.replace('', np.nan, regex=True)
+        # import data to sql
+        df.to_sql(
+            table_name,
+            engine,
+            index=False,
+            dtype=dtypes,
+            if_exists=m  # if the table already exists, append this data
+        )
+
+    def pg_load_table(self, file_path, table_name, m='replace', colums=None, type='csv'):
         dtypes = self.gettype(colums)
         try:
             engine = create_engine('postgres://{}:{}@{}:{}/{}'.format(self.user, self.pwd, self.host, self.port, self.dbname))
             count = 0
-            # read csv chuck by chuck
-            for df in pd.read_csv(file_path, chunksize=self.chuck_size):
-                # replace space value to nan
-                df = df.replace(r'^\s*$', np.nan, regex=True)
-                df = df.replace('', np.nan, regex=True)
-                # import data to sql
-                df.to_sql(
-                    table_name,
-                    engine,
-                    index=False,
-                    dtype=dtypes,
-                    if_exists=m  # if the table already exists, append this data
-                )
-                count += self.chuck_size
-                print("{0} rows".format(count), end="\r")
+            if type=='csv':
+                # read csv chuck by chuck
+                for df in pd.read_csv(file_path, chunksize=self.chuck_size):
+                    self.import_db(df, table_name, engine, dtypes, m)
+                    count += self.chuck_size
+                    print("{0} rows".format(count), end="\r")
+            else:
+            #     read .geojson
+                data = gpd.read_file(file_path)
+                df = pd.DataFrame(data)
+                df.pop('geometry')
+                self.import_db(df, table_name, engine, dtypes, m)
+                # count += self.chuck_size
+                # print("{0} rows".format(count), end="\r")
             print("Success!!")
 
         except Exception as e:
