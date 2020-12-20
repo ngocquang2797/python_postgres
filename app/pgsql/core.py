@@ -56,6 +56,7 @@ class dataLoader():
         self.pwd = "secret"
         self.chuck_size = 10000
 
+    # return header of csv file
     def file_header(self, file_path):
         unique_headers = set()
         for filename in iglob(file_path):
@@ -64,12 +65,14 @@ class dataLoader():
                 unique_headers.update(next(csvin, []))
                 return list(unique_headers)
 
+    # convert data type of columns to string type
     def gettype(self, cols):
         types = {}
         for col in cols:
             types[col] = sqlalchemy.types.String()
         return types
 
+    # import pandas fataframe to sql
     def import_db(self, df, table_name, engine, dtypes, m):
         # replace space value to nan
         df = df.replace(r'^\s*$', np.nan, regex=True)
@@ -98,10 +101,9 @@ class dataLoader():
             #     read .geojson
                 data = gpd.read_file(file_path)
                 df = pd.DataFrame(data)
+                # pop geometry columns
                 df.pop('geometry')
                 self.import_db(df, table_name, engine, dtypes, m)
-                # count += self.chuck_size
-                # print("{0} rows".format(count), end="\r")
             print("Success!!")
 
         except Exception as e:

@@ -19,12 +19,10 @@ def parse_args():
 
 def main():
     args = parse_args()
-    print("A")
     if args.path == None and args.tablename == None:
         args.parse_args(args=None if sys.argv[1:] else ['--help'])
 
     else:
-        print("B")
         cv = dataLoader()
         cv.pg_load_table(args.path, args.name_table, args.mode, args.alist, args.type)
 
