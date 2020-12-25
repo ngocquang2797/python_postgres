@@ -11,8 +11,8 @@ $ python main.py -p {csv path} -n {table name} -m {mode} -t {type of file} -c {s
 ##### - type of file: csv or geojson
 ##### - special columns: columns have mixed types
 
-###### Ex: python main.py -p /app/data/lau2_pc_la.csv -t test
-###### Ex: python main.py -p /app/data/ONSPD_MAY_2020_UK.csv -t test -c ru11ind
+###### Ex: python main.py -p /app/data/lau2_pc_la.csv -n test
+###### Ex: python main.py -p /app/data/ONSPD_MAY_2020_UK.csv -n test -c ru11ind
 ###### Ex: python main.py -p /app/data/geo_level.geojson -n test7 -t geojson
 
 

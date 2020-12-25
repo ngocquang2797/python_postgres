@@ -11,7 +11,7 @@ def parse_args():
     parser.add_argument("-t", "--type", type=str, default="csv",
                         help="type of data file")
     parser.add_argument('-c', '--columns', action='store', dest='alist',
-                        type=str, nargs='*', default=[],
+                        type=str, nargs='*', default=[""],
                         help="Special column\nExamples: -c fid wd19nm, -c lad19cd")
     args = parser.parse_args(args=None if sys.argv[1:] else ['--help'])
 

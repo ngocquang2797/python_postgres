@@ -93,7 +93,7 @@ class dataLoader():
             count = 0
             if type=='csv':
                 # read csv chuck by chuck
-                for df in pd.read_csv(file_path, chunksize=self.chuck_size):
+                for df in pd.read_csv(file_path, chunksize=self.chuck_size, encoding="ISO-8859-1"):
                     self.import_db(df, table_name, engine, dtypes, m)
                     count += self.chuck_size
                     print("{0} rows".format(count), end="\r")
