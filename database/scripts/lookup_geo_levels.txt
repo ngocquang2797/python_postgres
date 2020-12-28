@@ -1,0 +1,15 @@
+select Q1.pcd_id,
+	coalesce(Q1.lau1_id, local_authority.lau118cd, geo_level."LAU117CD") as lau1_id,
+	coalesce(Q1.lau2_id, local_authority.lau218cd, geo_level."LAU217CD") as lau2_id,
+	coalesce(local_authority.nuts318cd, geo_level."NUTS318CD") as nuts3_id,
+	coalesce(local_authority.nuts218cd, geo_level."NUTS218CD") as nuts2_id,
+	coalesce(local_authority.nuts118cd, geo_level."NUTS118CD") as nuts1_id
+from
+	(select
+		coalesce(msoa_lsoa.pcd7, pcd_wd.pcd7) as pcd_id,
+		coalesce(msoa_lsoa.ladcd, pcd_wd.lad11cd) as lau1_id,
+		pcd_wd.wd11cd as lau2_id
+	from msoa_lsoa
+	full outer join pcd_wd on msoa_lsoa.pcd7 = pcd_wd.pcd7) as Q1
+full outer join local_authority on Q1.lau2_id = local_authority.lau218cd
+full outer join geo_level on Q1.lau2_id = geo_level."LAU217CD"
