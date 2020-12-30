@@ -1,10 +1,13 @@
 select
+-- numbered id
 	row_number() over(order by pcdictrict.pcd) as fid,
 	pcdictrict.pcd
 from
+-- get postcode district from first 4 characters and remove space
 	(select RTRIM(LEFT(pcd7,4),' ') as pcd
 	from pcd_wd
 	group by pcd
+-- 	combine pcd_wd and msoa_lsoa tables.
 	union
 	select RTRIM(LEFT(pcd7,4),' ') as pcd
 	from msoa_lsoa

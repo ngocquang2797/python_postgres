@@ -1,4 +1,5 @@
 select
+-- numbered id
 	row_number() over(order by q1.code) as fid,
 	coalesce(q1.code, q2.code) as code,
 	coalesce(q1.name, q2.name) as name

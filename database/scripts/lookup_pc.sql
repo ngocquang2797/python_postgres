@@ -1,4 +1,5 @@
 select
+-- numbered id
     row_number() over(order by pcon19cd) as fid,
 	pcon19cd as code,
     pcon19nm as name
