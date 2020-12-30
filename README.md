@@ -14,6 +14,8 @@ $ python main.py -p {csv path} -n {table name} -m {mode} -t {type of file} -c {s
 ###### Ex: python main.py -p /app/data/lau2_pc_la.csv -n test
 ###### Ex: python main.py -p /app/data/ONSPD_MAY_2020_UK.csv -n test -c ru11ind
 ###### Ex: python main.py -p /app/data/geo_level.geojson -n test7 -t geojson
+###### Ex: python main.py -p /app/data/pcd11_par11_wd11_lad11_ew_lu.csv -n pcd_wd -c par11nmw wd11nmw lad11nmw
+
 
 
 ### database info:         
