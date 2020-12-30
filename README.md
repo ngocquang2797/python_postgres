@@ -31,3 +31,7 @@ $ python main.py -p {csv path} -n {table name} -m {mode} -t {type of file} -c {s
         port = "5433"
         user = "username"
         pwd = "secret"
+        
+#### sql scripts folder: /database/scripts
+#### expanded table: pcd_wd: 
+https://ons.maps.arcgis.com/sharing/rest/content/items/c4aeb11ff5b045018b7340e807d645cb/data
