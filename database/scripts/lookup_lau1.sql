@@ -9,24 +9,28 @@ from
 	from msoa_lsoa
 -- 	remove duplicate row
 	group by ladcd, ladnm) as q1
+-- 	merge table
 full outer join
 	(select lad11cd as code, lad11nm as name
 	from pcd_wd
 -- 	remove duplicate row
 	group by lad11cd, lad11nm) as q2
 on q1.code = q2.code
+-- 	merge table
 full outer join
 	(select lau118cd as code, lau118nm as name
 	from local_authority
 -- 	remove duplicate row
 	group by lau118cd, lau118nm)as q3
 on q2.code = q3.code
+-- 	merge table
 full outer join
 	(select lad19cd as code, lad19nm as name
 	from lau2_pc_la
 -- 	remove duplicate row
 	group by lad19cd, lad19nm)as q4
 on q3.code = q4.code
+-- 	merge table
 full outer join
 	(select "LAU117CD" as code, "LAU117NM" as name
 	from geo_level

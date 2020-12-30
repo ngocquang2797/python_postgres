@@ -9,18 +9,21 @@ from
 	from lau2_pc_la
 -- 	remove duplicate row
 	group by wd19cd, wd19nm) as q1
+-- 	merge table
 full outer join
 	(select lau218cd as code, lau218nm as name
 	from local_authority
 -- 	remove duplicate row
 	group by lau218cd, lau218nm) as q2
 on q1.code = q2.code
+-- 	merge table
 full outer join
 	(select wd11cd as code, wd11nm as name
 	from pcd_wd
 -- 	remove duplicate row
 	group by wd11cd, wd11nm)as q3
 on q2.code = q3.code
+-- 	merge table
 full outer join
 	(select "LAU217CD" as code, "LAU217NM" as name
 	from geo_level

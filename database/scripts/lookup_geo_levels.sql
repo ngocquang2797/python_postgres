@@ -15,12 +15,14 @@ from (select *
         FROM (select RTRIM(LEFT(pcd7,4),' ')  as pcd,
             wd11cd, lad11cd as lau1, pcd7
             from pcd_wd) as q1
+--             combine data from pcd_wd and msoa_lsoa tables
         full outer join
             (select RTRIM(LEFT(pcd7,4),' ')  as pcd,
                     ladcd as lau1, pcd7
                 from msoa_lsoa) as q2
         on q1.pcd7 = q2.pcd7) as q
     group by pcd, lau2, lau1) as query1
+-- combine data
 full outer join local_authority on query1.lau2 = local_authority.lau218cd
 full outer join geo_level on query1.lau2 = geo_level."LAU217CD"
 full outer join lau2_pc_la on query1.lau2 = lau2_pc_la.wd19cd;
