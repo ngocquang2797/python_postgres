@@ -2,6 +2,7 @@ select
 -- numbered id
 	row_number() over(order by query1.lau1) as fid,
        query1.pcd,
+    -- 	Standardize data by choosing a value
        coalesce(query1.lau1, local_authority.lau118cd, geo_level."LAU117CD") as lau1,
        coalesce(query1.lau2, local_authority.lau218cd, geo_level."LAU217CD") as lau2,
        coalesce(local_authority.nuts318cd, geo_level."NUTS318CD") as nuts3,

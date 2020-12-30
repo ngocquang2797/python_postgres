@@ -7,7 +7,7 @@ from
 	(select RTRIM(LEFT(pcd7,4),' ') as pcd
 	from pcd_wd
 	group by pcd
--- 	combine pcd_wd and msoa_lsoa tables.
+-- 	combine data from pcd_wd and msoa_lsoa tables.
 	union
 	select RTRIM(LEFT(pcd7,4),' ') as pcd
 	from msoa_lsoa

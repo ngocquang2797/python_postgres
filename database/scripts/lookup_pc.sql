@@ -4,4 +4,5 @@ select
 	pcon19cd as code,
     pcon19nm as name
 from lau2_pc_la
+-- 	remove duplicate row
 group by pcon19cd, pcon19nm;
