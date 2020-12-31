@@ -9,7 +9,8 @@ select
        coalesce(local_authority.nuts218cd, geo_level."NUTS218CD") as nuts2,
        coalesce(local_authority.nuts118cd, geo_level."NUTS118CD") as nuts1,
        lau2_pc_la.pcon19cd as pc
--- into lookup_geo_levels
+-- insert into lookup_geo_levels table
+into lookup_geo_levels
 from (select RTRIM(LEFT(Q1.pcd7,4),' ')  as pcd,
        Q1.lau1, Q1.lau2
     from (select coalesce(pcd_wd.pcd7, msoa_lsoa.pcd7) as pcd7,

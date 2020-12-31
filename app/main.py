@@ -3,6 +3,7 @@ import sys
 
 from pgsql.core import dataLoader
 
+
 def parse_args():
     parser = argparse.ArgumentParser("Import data from csv to postgresDB")
     parser.add_argument("-p", "--path", type=str, help="path to .csv files")

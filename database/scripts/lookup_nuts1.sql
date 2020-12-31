@@ -4,6 +4,8 @@ select
 -- 	Standardize data by choosing a value
 	coalesce(q1.code, q2.code) as code,
 	coalesce(q1.name, q2.name) as name
+-- insert into lookup_nuts1 table
+into lookup_nuts1
 from
 	(select nuts118cd as code, nuts118nm as name
 	from local_authority

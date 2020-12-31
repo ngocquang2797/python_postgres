@@ -2,6 +2,8 @@ select
 -- numbered id
 	row_number() over(order by pcdictrict.pcd) as fid,
 	pcdictrict.pcd
+-- insert into lookup_pcd table
+into lookup_pcd
 from
 -- get postcode district from first 4 characters and remove space
 	(select RTRIM(LEFT(pcd7,4),' ') as pcd

@@ -4,6 +4,8 @@ select
 -- 	Standardize data by choosing a value
 	coalesce(q1.code, q2.code, q3.code, q4.code, q5.code) as code,
 	coalesce(q1.name, q2.name, q3.name, q4.name, q5.name) as name
+-- insert into lookup_lau1 table
+into lookup_lau1
 from
 	(select ladcd as code, ladnm as name
 	from msoa_lsoa
