@@ -1,4 +1,4 @@
-select lau2, lau1, count(*)
+select lau2, lau1, pcd, count(*)
 from
 (
     select *
@@ -16,5 +16,5 @@ from
          ) as Q2
     group by pcd, lau1, lau2
 ) as Q3
-group by lau2, lau1
+group by lau2, lau1, pcd
 having count(*)>1
