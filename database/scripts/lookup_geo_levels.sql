@@ -20,6 +20,6 @@ from (select RTRIM(LEFT(Q1.pcd7,4),' ')  as pcd,
         full outer join pcd_wd on msoa_lsoa.pcd7 = pcd_wd.pcd7) as Q1
 group by pcd, lau1, lau2) as query1
 -- combine data
-full outer join local_authority on query1.lau2 = local_authority.lau218cd
-full outer join geo_level on local_authority.lau218cd = geo_level."LAU217CD"
-full outer join lau2_pc_la on geo_level."LAU217CD" = lau2_pc_la.wd19cd;
+full outer join local_authority on query1.lau2 = local_authority.lau218cd and query1.lau1 = local_authority.lau118cd
+full outer join geo_level on local_authority.lau218cd = geo_level."LAU217CD" and local_authority.lau118cd = geo_level."LAU117CD"
+full outer join lau2_pc_la on geo_level."LAU217CD" = lau2_pc_la.wd19cd and geo_level."LAU117CD" = lau2_pc_la.lad19cd;
