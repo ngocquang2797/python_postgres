@@ -18,4 +18,4 @@ full outer join
 -- 	remove duplicate row
 	group by "NUTS218CD", "NUTS218NM") as q2
 on q1.code = q2.code;
-alter table lookup_nuts2 add primary key (code)
+alter table lookup_nuts2 add primary key (code, fid)

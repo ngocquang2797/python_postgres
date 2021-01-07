@@ -17,4 +17,5 @@ full outer join
 	from geo_level
 -- 	remove duplicate row
 	group by "NUTS318CD", "NUTS318NM") as q2
-on q1.code = q2.code
+on q1.code = q2.code;
+alter table lookup_nuts3 add primary key (code, fid)

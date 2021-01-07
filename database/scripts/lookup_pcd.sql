@@ -14,3 +14,4 @@ from
 	select RTRIM(LEFT(pcd7,4),' ') as pcd
 	from msoa_lsoa
 	group by pcd) as pcdictrict;
+alter table lookup_pcd add primary key (pcd, fid)

@@ -16,4 +16,4 @@ ORDER  BY code, name DESC)
 select row_number() over(order by q2.code) as fid, *
 into lookup_pc
 from q2;
-alter table lookup_pc add primary key (code)
+alter table lookup_pc add primary key (code,fid)

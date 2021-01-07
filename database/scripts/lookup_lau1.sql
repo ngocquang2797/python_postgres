@@ -65,4 +65,4 @@ into lookup_lau1
 from Q6
 group by code, name
 having code is not null;
-alter table lookup_lau1 add primary key (code)
+alter table lookup_lau1 add primary key (code, fid)

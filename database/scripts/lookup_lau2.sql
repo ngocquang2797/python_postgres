@@ -48,4 +48,4 @@ q7 as
 select row_number() over(order by q7.code) as fid, *
 into lookup_lau2
 from q7;
-alter table lookup_lau2 add primary key (code)
+alter table lookup_lau2 add primary key (code, fid)
