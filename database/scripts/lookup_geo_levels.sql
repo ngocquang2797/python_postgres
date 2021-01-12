@@ -1,11 +1,11 @@
 -- combine data from pcd_wd and msoa_lsoa to get pcd7, lau1, lau2
 with Q1 as
     (
-        select coalesce(pcd_wd.pcd7, msoa_lsoa.pcd7) as pcd7,
-               coalesce(pcd_wd.lad11cd, msoa_lsoa.ladcd) as lau1,
-               pcd_wd.wd11cd as lau2
-        from msoa_lsoa
-        full outer join pcd_wd on msoa_lsoa.pcd7 = pcd_wd.pcd7
+        select coalesce(pcd_wd_new.pcd7, msoa_lsoa_new.pcd7) as pcd7,
+               coalesce(pcd_wd_new.lad11cd, msoa_lsoa_new.ladcd) as lau1,
+               pcd_wd_new.wd11cd as lau2
+        from msoa_lsoa_new
+        full outer join pcd_wd_new on msoa_lsoa_new.pcd7 = pcd_wd_new.pcd7
     ),
 -- get pcd from pcd7
 Q2 as
@@ -19,13 +19,13 @@ Q2 as
 Q3 as
     (
         select
-        coalesce(local_authority.lau118cd, geo_level."LAU117CD") as lau1,
-        coalesce(local_authority.lau218cd, geo_level."LAU217CD") as lau2,
-        coalesce(local_authority.nuts318cd, geo_level."NUTS318CD") as nuts3,
-        coalesce(local_authority.nuts218cd, geo_level."NUTS218CD") as nuts2,
-        coalesce(local_authority.nuts118cd, geo_level."NUTS118CD") as nuts1
-        from local_authority
-        full outer join geo_level on local_authority.lau218cd = geo_level."LAU217CD" and local_authority.lau118cd = geo_level."LAU117CD"
+        coalesce(local_authority_new.lau118cd, geo_level_new."LAU117CD") as lau1,
+        coalesce(local_authority_new.lau218cd, geo_level_new."LAU217CD") as lau2,
+        coalesce(local_authority_new.nuts318cd, geo_level_new."NUTS318CD") as nuts3,
+        coalesce(local_authority_new.nuts218cd, geo_level_new."NUTS218CD") as nuts2,
+        coalesce(local_authority_new.nuts118cd, geo_level_new."NUTS118CD") as nuts1
+        from local_authority_new
+        full outer join geo_level_new on local_authority_new.lau218cd = geo_level_new."LAU217CD" and local_authority_new.lau118cd = geo_level_new."LAU117CD"
 
     ),
 -- combine data from Q2, local_authority, geo_level table
@@ -49,18 +49,25 @@ Q5 as
             -- numbered id
         select row_number() over(order by Q4.lau1) as fid,
                Q4.pcd,
-               coalesce(Q4.lau1, lau2_pc_la.lad19cd) as lau1,
-               coalesce(Q4.lau2, lau2_pc_la.wd19cd) as lau2,
+               coalesce(Q4.lau1, lau2_pc_la_new.lad19cd) as lau1,
+               coalesce(Q4.lau2, lau2_pc_la_new.wd19cd) as lau2,
                Q4.nuts1,
                Q4.nuts2,
                Q4.nuts3,
-               lau2_pc_la.pcon19cd as pc
+               lau2_pc_la_new.pcon19cd as pc
         from Q4
-        full outer join lau2_pc_la on Q4.lau2 = lau2_pc_la.wd19cd and Q4.lau1 = lau2_pc_la.lad19cd
+        full outer join lau2_pc_la_new on Q4.lau2 = lau2_pc_la_new.wd19cd and Q4.lau1 = lau2_pc_la_new.lad19cd
     )
 
 
 select *
 -- insert data to lookup_geo_levels table
 into lookup_geo_levels
-from Q5
+from Q5;
+alter table lookup_geo_levels add foreign key (lau1) references lookup_lau1(code),
+    add foreign key (lau2) references lookup_lau2(code),
+    add foreign key (nuts1) references lookup_nuts1(code),
+    add foreign key (nuts2) references lookup_nuts2(code),
+    add foreign key (nuts3) references lookup_nuts3(code),
+    add foreign key (pc) references lookup_pc(code),
+    add foreign key (pcd) references lookup_pcd(pcd);

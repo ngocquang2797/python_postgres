@@ -18,4 +18,7 @@ select *
 -- insert data to lau2_pc_la_new table
 into lau2_pc_la_new
 from lau2_pc_la
-left join Q3 on lau2_pc_la.wd19cd = Q3.lau2 and lau2_pc_la.lad19cd = Q3.lau1
+left join Q3 on lau2_pc_la.wd19cd = Q3.lau2 and lau2_pc_la.lad19cd = Q3.lau1;
+alter table lau2_pc_la_new add foreign key (wd19cd) references lookup_lau2(code),
+    add foreign key (pcon19cd) references lookup_pc(code),
+    add foreign key (lad19cd) references lookup_lau1(code)

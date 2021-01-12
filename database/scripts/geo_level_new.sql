@@ -18,4 +18,9 @@ select *
 -- insert data to geo_level_new table
 into geo_level_new
 from geo_level
-left join Q3 on geo_level."LAU217CD" = Q3.lau2 and geo_level."LAU117CD" = Q3.lau1
+left join Q3 on geo_level."LAU217CD" = Q3.lau2 and geo_level."LAU117CD" = Q3.lau1;
+alter table geo_level_new add foreign key ("LAU217CD") references lookup_lau2(code),
+    add foreign key ("LAU117CD") references lookup_lau1(code),
+    add foreign key ("NUTS118CD") references lookup_nuts1(code),
+    add foreign key ("NUTS218CD") references lookup_nuts2(code),
+    add foreign key ("NUTS318CD") references lookup_nuts3(code);

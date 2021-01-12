@@ -41,6 +41,7 @@ q5 as
             full outer join q4 on q3.code = q4.code
     )
 select distinct on(code) row_number() over(order by q5.code) as fid, *
--- into lookup_lau2
+into lookup_lau2
 from q5
-order by code, name desc
+order by code, name desc;
+alter table lookup_lau2 add primary key (fid, code)

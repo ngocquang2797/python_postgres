@@ -18,4 +18,9 @@ select *
 -- insert data to local_authority_new table
 into local_authority_new
 from local_authority
-left join Q3 on local_authority.lau218cd = Q3.lau2 and local_authority.lau118cd = Q3.lau1
+left join Q3 on local_authority.lau218cd = Q3.lau2 and local_authority.lau118cd = Q3.lau1;
+alter table local_authority_new add foreign key (lau218cd) references lookup_lau2(code),
+    add foreign key (lau118cd) references lookup_lau1(code),
+    add foreign key (nuts118cd) references lookup_nuts1(code),
+    add foreign key (nuts218cd) references lookup_nuts2(code),
+    add foreign key (nuts318cd) references lookup_nuts3(code);
