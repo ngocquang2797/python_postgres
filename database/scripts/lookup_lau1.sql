@@ -4,6 +4,7 @@ with q1 as
             from msoa_lsoa
         -- 	remove duplicate row
             group by ladcd, ladnm
+            having ladcd is not null
         ),
     q2 as
         (
@@ -11,6 +12,7 @@ with q1 as
             from pcd_wd
         -- 	remove duplicate row
             group by lad11cd, lad11nm
+            having lad11cd is not null
         ),
     q3 as
         (
@@ -18,13 +20,15 @@ with q1 as
             from local_authority
         -- 	remove duplicate row
             group by lau118cd, lau118nm
-        ),
+            having lau118cd is not null
+            ),
     q4 as
         (
             select lad19cd as code, lad19nm as name
             from lau2_pc_la
         -- 	remove duplicate row
             group by lad19cd, lad19nm
+            having lad19cd is not null
         ),
     q5 as
         (
@@ -32,37 +36,23 @@ with q1 as
             from geo_level
         -- 	remove duplicate row
             group by "LAU117CD", "LAU117NM"
+            having "LAU117CD" is not null
         ),
 Q6 as
 (
     select
--- numbered id
--- 	row_number() over(order by q1.code) as fid,
 -- 	Standardize data by choosing a value
 	coalesce(q1.code, q2.code, q3.code, q4.code, q5.code) as code,
 	coalesce(q1.name, q2.name, q3.name, q4.name, q5.name) as name
--- insert into lookup_lau1 table
--- into lookup_lau1
 from
 	q1
 -- 	merge table
-full outer join q2
-on q1.code = q2.code
--- 	merge table
-full outer join q3
-on q2.code = q3.code
--- 	merge table
-full outer join q4
-on q3.code = q4.code
--- 	merge table
-full outer join q5
-on q4.code = q5.code
+full outer join q2 on q1.code = q2.code
+full outer join q3 on q2.code = q3.code
+full outer join q4 on q3.code = q4.code
+full outer join q5 on q4.code = q5.code
 )
-select
-    row_number() over(order by code) as fid,
-       code, name
-into lookup_lau1
+select distinct on(code) row_number() over(order by code) as fid, *
+-- into lookup_lau1
 from Q6
-group by code, name
-having code is not null;
-alter table lookup_lau1 add primary key (code, fid)
+order by code, name desc
