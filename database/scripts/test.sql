@@ -532,6 +532,31 @@ as
 alter table lookup_pcd add primary key (pcd),
     add column id serial;
 
+-- add constrain
+-- msoa_lsoa
+alter table msoa_lsoa_new add foreign key (ladcd) references lookup_lau1(code),
+    add foreign key (pcd) references lookup_pcd(pcd);
+-- geo_level
+alter table geo_level add foreign key ("LAU217CD") references lookup_lau2(code),
+        add foreign key ("LAU117CD") references lookup_lau1(code),
+        add foreign key ("NUTS318CD") references lookup_nuts3(code),
+        add foreign key ("NUTS218CD") references lookup_nuts2(code),
+        add foreign key ("NUTS118CD") references lookup_nuts1(code);
+-- lau2_pc_la
+alter table lau2_pc_la add foreign key (wd19cd) references lookup_lau2(code),
+        add foreign key (pcon19cd) references lookup_pc(code),
+        add foreign key (lad19cd) references lookup_lau1(code);
+-- local_authority
+alter table local_authority add foreign key (lau218cd) references lookup_lau2(code),
+        add foreign key (lau118cd) references lookup_lau1(code),
+        add foreign key (nuts318cd) references lookup_nuts3(code),
+        add foreign key (nuts218cd) references lookup_nuts2(code),
+        add foreign key (nuts118cd) references lookup_nuts1(code);
+-- pcd_wd
+alter table pcd_wd_new add foreign key (pcd) references lookup_pcd(pcd),
+        add foreign key (wd11cd) references lookup_lau2(code),
+        add foreign key (lad11cd) references lookup_lau1(code);
+
 -- create lookup_geo_levels_code_table
 drop table if exists lookup_geo_levels_code CASCADE;
 create table lookup_geo_levels_code
