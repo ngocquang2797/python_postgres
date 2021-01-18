@@ -1,3 +1,4 @@
+-- create lookup_geo_levels_code_table
 drop table if exists lookup_geo_levels_code CASCADE;
 create table lookup_geo_levels_code
 as
@@ -23,13 +24,13 @@ as
     Q3 as
         (
             select
-            coalesce(local_authority_new.lau118cd, geo_level_new."LAU117CD") as lau1,
-            coalesce(local_authority_new.lau218cd, geo_level_new."LAU217CD") as lau2,
-            coalesce(local_authority_new.nuts318cd, geo_level_new."NUTS318CD") as nuts3,
-            coalesce(local_authority_new.nuts218cd, geo_level_new."NUTS218CD") as nuts2,
-            coalesce(local_authority_new.nuts118cd, geo_level_new."NUTS118CD") as nuts1
-            from local_authority_new
-            full outer join geo_level_new on local_authority_new.lau218cd = geo_level_new."LAU217CD" and local_authority_new.lau118cd = geo_level_new."LAU117CD"
+            coalesce(local_authority.lau118cd, geo_level."LAU117CD") as lau1,
+            coalesce(local_authority.lau218cd, geo_level."LAU217CD") as lau2,
+            coalesce(local_authority.nuts318cd, geo_level."NUTS318CD") as nuts3,
+            coalesce(local_authority.nuts218cd, geo_level."NUTS218CD") as nuts2,
+            coalesce(local_authority.nuts118cd, geo_level."NUTS118CD") as nuts1
+            from local_authority
+            full outer join geo_level on local_authority.lau218cd = geo_level."LAU217CD" and local_authority.lau118cd = geo_level."LAU117CD"
 
         ),
     -- combine data from Q2, local_authority, geo_level table
@@ -52,14 +53,14 @@ as
         (
                 -- numbered id
             select Q4.pcd,
-                   coalesce(Q4.lau1, lau2_pc_la_new.lad19cd) as lau1,
-                   coalesce(Q4.lau2, lau2_pc_la_new.wd19cd) as lau2,
+                   coalesce(Q4.lau1, lau2_pc_la.lad19cd) as lau1,
+                   coalesce(Q4.lau2, lau2_pc_la.wd19cd) as lau2,
                    Q4.nuts1,
                    Q4.nuts2,
                    Q4.nuts3,
-                   lau2_pc_la_new.pcon19cd as pc
+                   lau2_pc_la.pcon19cd as pc
             from Q4
-            full outer join lau2_pc_la_new on Q4.lau2 = lau2_pc_la_new.wd19cd and Q4.lau1 = lau2_pc_la_new.lad19cd
+            full outer join lau2_pc_la on Q4.lau2 = lau2_pc_la.wd19cd and Q4.lau1 = lau2_pc_la.lad19cd
         )
 
 
@@ -76,7 +77,7 @@ alter table lookup_geo_levels_code add column id serial,
     add foreign key (pc) references lookup_pc(code),
     add foreign key (pcd) references lookup_pcd(pcd);
 
-
+-- create lookup_geo_levels_id
 drop table if exists lookup_geo_levels_id CASCADE;
 create table lookup_geo_levels_id
 as
