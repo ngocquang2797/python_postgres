@@ -258,30 +258,6 @@ as
 alter table lookup_pcd add column id serial PRIMARY KEY;
 
 
--- add constrain
--- msoa_lsoa
-alter table msoa_lsoa_new add foreign key (ladcd) references lookup_lau1(code),
-    add foreign key (pcd) references lookup_pcd(pcd);
--- geo_level
-alter table geo_level add foreign key ("LAU217CD") references lookup_lau2(code),
-        add foreign key ("LAU117CD") references lookup_lau1(code),
-        add foreign key ("NUTS318CD") references lookup_nuts3(code),
-        add foreign key ("NUTS218CD") references lookup_nuts2(code),
-        add foreign key ("NUTS118CD") references lookup_nuts1(code);
--- lau2_pc_la
-alter table lau2_pc_la add foreign key (wd19cd) references lookup_lau2(code),
-        add foreign key (pcon19cd) references lookup_pc(code),
-        add foreign key (lad19cd) references lookup_lau1(code);
--- local_authority
-alter table local_authority add foreign key (lau218cd) references lookup_lau2(code),
-        add foreign key (lau118cd) references lookup_lau1(code),
-        add foreign key (nuts318cd) references lookup_nuts3(code),
-        add foreign key (nuts218cd) references lookup_nuts2(code),
-        add foreign key (nuts118cd) references lookup_nuts1(code);
--- pcd_wd
-alter table pcd_wd_new add foreign key (pcd) references lookup_pcd(pcd),
-        add foreign key (wd11cd) references lookup_lau2(code),
-        add foreign key (lad11cd) references lookup_lau1(code);
 
 -- create lookup_geo_levels_code_table
 drop table if exists lookup_geo_levels_code CASCADE;
@@ -366,14 +342,14 @@ as
        lookup_nuts2.id as nuts2_id,
        lookup_nuts3.id as nuts3_id,
        lookup_pc.id as pc_id
-    from lookup_geo_levels
-    left join lookup_lau1 on lookup_geo_levels.lau1 = lookup_lau1.code
-    left join lookup_lau2 on lookup_geo_levels.lau2 = lookup_lau2.code
-    left join lookup_pcd on lookup_geo_levels.pcd = lookup_pcd.pcd
-    left join lookup_nuts1 on lookup_geo_levels.nuts1 = lookup_nuts1.code
-    left join lookup_nuts2 on lookup_geo_levels.nuts2 = lookup_nuts2.code
-    left join lookup_nuts3 on lookup_geo_levels.nuts3 = lookup_nuts3.code
-    left join lookup_pc on lookup_geo_levels.pc = lookup_pc.code
+    from lookup_geo_levels_code
+    left join lookup_lau1 on lookup_geo_levels_code.lau1 = lookup_lau1.code
+    left join lookup_lau2 on lookup_geo_levels_code.lau2 = lookup_lau2.code
+    left join lookup_pcd on lookup_geo_levels_code.pcd = lookup_pcd.pcd
+    left join lookup_nuts1 on lookup_geo_levels_code.nuts1 = lookup_nuts1.code
+    left join lookup_nuts2 on lookup_geo_levels_code.nuts2 = lookup_nuts2.code
+    left join lookup_nuts3 on lookup_geo_levels_code.nuts3 = lookup_nuts3.code
+    left join lookup_pc on lookup_geo_levels_code.pc = lookup_pc.code
 );
 
 alter table lookup_geo_levels_id add column id serial,

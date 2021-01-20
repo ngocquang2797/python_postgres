@@ -81,15 +81,16 @@ as
        lookup_nuts2.id as nuts2_id,
        lookup_nuts3.id as nuts3_id,
        lookup_pc.id as pc_id
-    from lookup_geo_levels
-    left join lookup_lau1 on lookup_geo_levels.lau1 = lookup_lau1.code
-    left join lookup_lau2 on lookup_geo_levels.lau2 = lookup_lau2.code
-    left join lookup_pcd on lookup_geo_levels.pcd = lookup_pcd.pcd
-    left join lookup_nuts1 on lookup_geo_levels.nuts1 = lookup_nuts1.code
-    left join lookup_nuts2 on lookup_geo_levels.nuts2 = lookup_nuts2.code
-    left join lookup_nuts3 on lookup_geo_levels.nuts3 = lookup_nuts3.code
-    left join lookup_pc on lookup_geo_levels.pc = lookup_pc.code
+    from lookup_geo_levels_code
+    left join lookup_lau1 on lookup_geo_levels_code.lau1 = lookup_lau1.code
+    left join lookup_lau2 on lookup_geo_levels_code.lau2 = lookup_lau2.code
+    left join lookup_pcd on lookup_geo_levels_code.pcd = lookup_pcd.pcd
+    left join lookup_nuts1 on lookup_geo_levels_code.nuts1 = lookup_nuts1.code
+    left join lookup_nuts2 on lookup_geo_levels_code.nuts2 = lookup_nuts2.code
+    left join lookup_nuts3 on lookup_geo_levels_code.nuts3 = lookup_nuts3.code
+    left join lookup_pc on lookup_geo_levels_code.pc = lookup_pc.code
 );
+
 alter table lookup_geo_levels_id add column id serial,
     add foreign key (lau1_id) references lookup_lau1(id),
     add foreign key (lau2_id) references lookup_lau2(id),
