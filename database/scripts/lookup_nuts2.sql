@@ -20,5 +20,4 @@ as
         group by "NUTS218CD", "NUTS218NM") as q2
     on q1.code = q2.code
 );
-alter table lookup_nuts2 add primary key (code),
-    add column id serial;
+alter table lookup_nuts2 add column id serial PRIMARY KEY;

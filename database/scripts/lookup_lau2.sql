@@ -55,5 +55,4 @@ as
     from q5
     order by code, name desc
 );
-alter table lookup_lau2 add primary key (code),
-    add column id serial;
+alter table lookup_lau2 add column id serial PRIMARY KEY;

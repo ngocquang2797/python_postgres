@@ -9,5 +9,4 @@ as
         select *
         from q2
     );
-alter table lookup_pc add primary key (code),
-    add column id serial;
+alter table lookup_pc add column id serial PRIMARY KEY;

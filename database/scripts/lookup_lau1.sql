@@ -68,5 +68,4 @@ as
     order by code, name desc
 );
 -- add primary key and id column
-alter table lookup_lau1 add primary key (code),
-    add column id serial;
+alter table lookup_lau1 add column id serial PRIMARY KEY;

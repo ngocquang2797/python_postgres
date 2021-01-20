@@ -68,14 +68,6 @@ as
     from Q5
     group by pcd, lau1, lau2, nuts1, nuts2, nuts3, pc
 );
-alter table lookup_geo_levels_code add column id serial,
-    add foreign key (lau1) references lookup_lau1(code),
-    add foreign key (lau2) references lookup_lau2(code),
-    add foreign key (nuts1) references lookup_nuts1(code),
-    add foreign key (nuts2) references lookup_nuts2(code),
-    add foreign key (nuts3) references lookup_nuts3(code),
-    add foreign key (pc) references lookup_pc(code),
-    add foreign key (pcd) references lookup_pcd(pcd);
 
 -- create lookup_geo_levels_id
 drop table if exists lookup_geo_levels_id CASCADE;
@@ -98,3 +90,11 @@ as
     left join lookup_nuts3 on lookup_geo_levels.nuts3 = lookup_nuts3.code
     left join lookup_pc on lookup_geo_levels.pc = lookup_pc.code
 );
+alter table lookup_geo_levels_id add column id serial,
+    add foreign key (lau1_id) references lookup_lau1(id),
+    add foreign key (lau2_id) references lookup_lau2(id),
+    add foreign key (nuts1_id) references lookup_nuts1(id),
+    add foreign key (nuts2_id) references lookup_nuts2(id),
+    add foreign key (nuts3_id) references lookup_nuts3(id),
+    add foreign key (pc_id) references lookup_pc(id),
+    add foreign key (pcd_id) references lookup_pcd(id);

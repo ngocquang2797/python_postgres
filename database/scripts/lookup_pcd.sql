@@ -14,5 +14,4 @@ as
             from msoa_lsoa
             group by pcd) as pcdictrict
     );
-alter table lookup_pcd add primary key (pcd),
-    add column id serial;
+alter table lookup_pcd add column id serial PRIMARY KEY;
