@@ -6,19 +6,21 @@ as
     -- combine data from pcd_wd and msoa_lsoa to get pcd7, lau1, lau2
     with Q1 as
         (
-            select coalesce(pcd_wd_new.pcd7, msoa_lsoa_new.pcd7) as pcd7,
-                   coalesce(pcd_wd_new.lad11cd, msoa_lsoa_new.ladcd) as lau1,
-                   pcd_wd_new.wd11cd as lau2
+            select coalesce(pcd_wd_new.pcd7, msoa_lsoa_new.pcd7, "ONSPD_MAY_2020_UK".pcd) as pcd7,
+                   coalesce(pcd_wd_new.lad11cd, msoa_lsoa_new.ladcd, "ONSPD_MAY_2020_UK".oslaua) as lau1,
+                   pcd_wd_new.wd11cd as lau2,
+                   "ONSPD_MAY_2020_UK".pcon as pc
             from msoa_lsoa_new
             full outer join pcd_wd_new on msoa_lsoa_new.pcd7 = pcd_wd_new.pcd7
+            full outer join "ONSPD_MAY_2020_UK" on pcd_wd_new.pcd7 = "ONSPD_MAY_2020_UK".pcd
         ),
     -- get pcd from pcd7
     Q2 as
         (
             select RTRIM(LEFT(Q1.pcd7,4),' ')  as pcd,
-               Q1.lau1, Q1.lau2
+               Q1.lau1, Q1.lau2, Q1.pc
             from Q1
-            group by pcd, lau1, lau2
+            group by pcd, lau1, lau2, pc
         ),
     --      combine data from local_authority and geo_level to get lau1, lau2, nuts1, nuts2, nuts3
     Q3 as
@@ -38,6 +40,7 @@ as
         (
             select
             Q2.pcd,
+            Q2.pc,
             -- 	Standardize data by choosing a value
             coalesce(Q3.lau1, Q2.lau1) as lau1,
             coalesce(Q3.lau2, Q2.lau2) as lau2,
@@ -58,7 +61,7 @@ as
                    Q4.nuts1,
                    Q4.nuts2,
                    Q4.nuts3,
-                   lau2_pc_la.pcon19cd as pc
+                   coalesce(Q4.pc,lau2_pc_la.pcon19cd) as pc
             from Q4
             full outer join lau2_pc_la on Q4.lau2 = lau2_pc_la.wd19cd and Q4.lau1 = lau2_pc_la.lad19cd
         )

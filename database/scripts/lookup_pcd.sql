@@ -12,6 +12,12 @@ as
             union
             select RTRIM(LEFT(pcd7,4),' ') as pcd
             from msoa_lsoa
-            group by pcd) as pcdictrict
+            group by pcd
+            union
+            select RTRIM(LEFT(pcd,4),' ') as pcd
+            from "ONSPD_MAY_2020_UK"
+            group by pcd
+            ) as pcdictrict
+
     );
 alter table lookup_pcd add column id serial PRIMARY KEY;

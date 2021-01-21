@@ -68,11 +68,18 @@ as
             group by "LAU117CD", "LAU117NM"
             having "LAU117CD" is not null
         ),
-    Q6 as
+--          "ONSPD_MAY_2020_UK" table
+    q6 as
+        (
+            select oslaua as code
+            from "ONSPD_MAY_2020_UK"
+            group by oslaua
+        ),
+    Q7 as
     (
         select
     -- 	Standardize data by choosing a value
-        coalesce(q1.code, q2.code, q3.code, q4.code, q5.code) as code,
+        coalesce(q1.code, q2.code, q3.code, q4.code, q5.code, q6.code) as code,
         coalesce(q1.name, q2.name, q3.name, q4.name, q5.name) as name
     from
         q1
@@ -81,9 +88,10 @@ as
     full outer join q3 on q2.code = q3.code
     full outer join q4 on q3.code = q4.code
     full outer join q5 on q4.code = q5.code
+    full outer join q6 on q5.code = q6.code
     )
     select distinct on(code) *
-    from Q6
+    from Q7
     order by code, name desc
 );
 -- add primary key and id column
@@ -232,9 +240,25 @@ as
         with q2 as(SELECT DISTINCT ON (pcon19cd)
                pcon19cd as code , pcon19nm as name
         FROM   lau2_pc_la
-        ORDER  BY code, name DESC)
-        select *
-        from q2
+        ORDER  BY code, name DESC),
+        q1 as
+        (
+            select pcon as code
+            from "ONSPD_MAY_2020_UK"
+            group by pcon
+        ),
+        q3 as
+        (
+            select
+            -- 	Standardize data by choosing a value
+                coalesce(q1.code, q2.code) as code,
+                coalesce(q2.name) as name
+            from q2
+            full outer join q1 on q2.code = q1.code
+        )
+        select distinct on(code) *
+        from q3
+        order by code, name desc
     );
 alter table lookup_pc add column id serial PRIMARY KEY;
 
@@ -249,11 +273,17 @@ as
             (select RTRIM(LEFT(pcd7,4),' ') as pcd
             from pcd_wd
             group by pcd
-        -- 	combine data from pcd_wd and msoa_lsoa tables.
+        -- 	combine data from pcd_wd, msoa_lsoa and "ONSPD_MAY_2020_UK" tables.
             union
             select RTRIM(LEFT(pcd7,4),' ') as pcd
             from msoa_lsoa
-            group by pcd) as pcdictrict
+            group by pcd
+            union
+            select RTRIM(LEFT(pcd,4),' ') as pcd
+            from "ONSPD_MAY_2020_UK"
+            group by pcd
+            ) as pcdictrict
+
     );
 alter table lookup_pcd add column id serial PRIMARY KEY;
 

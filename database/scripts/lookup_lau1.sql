@@ -3,6 +3,7 @@ drop table if exists lookup_lau1 CASCADE;
 create table lookup_lau1
 as
 (
+
     with
     -- lau1 msoa_lsoa table
     q1 as
@@ -49,11 +50,17 @@ as
             group by "LAU117CD", "LAU117NM"
             having "LAU117CD" is not null
         ),
-    Q6 as
+    q6 as
+        (
+            select oslaua as code
+            from "ONSPD_MAY_2020_UK"
+            group by oslaua
+        ),
+    Q7 as
     (
         select
     -- 	Standardize data by choosing a value
-        coalesce(q1.code, q2.code, q3.code, q4.code, q5.code) as code,
+        coalesce(q1.code, q2.code, q3.code, q4.code, q5.code, q6.code) as code,
         coalesce(q1.name, q2.name, q3.name, q4.name, q5.name) as name
     from
         q1
@@ -62,10 +69,12 @@ as
     full outer join q3 on q2.code = q3.code
     full outer join q4 on q3.code = q4.code
     full outer join q5 on q4.code = q5.code
+    full outer join q6 on q5.code = q6.code
     )
     select distinct on(code) *
-    from Q6
+    from Q7
     order by code, name desc
+
 );
 -- add primary key and id column
 alter table lookup_lau1 add column id serial PRIMARY KEY;
