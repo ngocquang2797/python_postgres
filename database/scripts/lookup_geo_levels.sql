@@ -1,4 +1,4 @@
--- "ONSPD_MAY_2020_UK"
+-- "ONSPD_MAY_2020_UK" get pcd, lau1, pc from "ONSPD_MAY_2020_UK"
 drop table if exists onspd_uk CASCADE;
 create table onspd_uk as
     (
@@ -9,7 +9,7 @@ create table onspd_uk as
 drop table if exists pcd_msoa CASCADE;
 create table pcd_msoa as
     (
-        -- combine data from pcd_wd ,"ONSPD_MAY_2020_UK" and msoa_lsoa to get pcd7, lau1, lau2
+        -- combine data from pcd_wd and msoa_lsoa to get pcd7, lau1, lau2
         select coalesce(pcd_wd.pcd7, msoa_lsoa.pcd7) as pcd7,
                    coalesce(pcd_wd.lad11cd, msoa_lsoa.ladcd) as lau1,
                    pcd_wd.wd11cd as lau2
@@ -17,6 +17,7 @@ create table pcd_msoa as
             full outer join pcd_wd on msoa_lsoa.pcd7 = pcd_wd.pcd7
     );
 
+-- combine data from pcd_msoa and onspd_uk
 drop table if exists pcd_merge CASCADE;
 create table pcd_merge as
     (
